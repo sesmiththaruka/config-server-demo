@@ -1,0 +1,99 @@
+client:
+  name: 
+spring:
+  application:
+    name: 
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILES:local}
+  jackson:
+    serialization-inclusion: NON_NULL
+    default-property-inclusion: NON_NULL
+  datasource:
+    url: jdbc:postgresql://localhost:5432/test-23
+    username: postgres
+    password: 123456789
+    driver-class-name: org.postgresql.Driver
+  batch:
+    jdbc:
+      initialize-schema: never
+    job:
+      enabled: ${BATCH_ENABLED:false}
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: false
+    defer-datasource-initialization: false
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  flyway:
+    enabled: true
+    url: ${spring.datasource.url}
+    locations: classpath:db/migration, db/migration/${client.name}
+    baseline-on-migrate: true
+    validate-on-migrate: true
+    clean-disabled: false
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+  cache:
+    type: simple
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8080/realms/3242
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
+  servlet:
+    multipart:
+      max-file-size: ${MAX_FILE_SIZE:25MB}
+      max-request-size: ${MAX_REQUEST_SIZE:25MB}
+server:
+  port: 8090
+system:
+  mail:
+    from-email:
+    from-name:
+  default:
+    time-zone: "Asia/Kuala_Lumpur"
+  file:
+    upload-dir: ${FILE_UPLOAD_DIR:./files/uploaded/}
+    thumb:
+      dir: thumbnail
+      width: 150
+      supported-extensions: .jpeg,.jpg,.png,.heic
+    storage:
+      type: local #  local, s3 or sftp
+aws:
+  s3:
+    endpoint-url:
+    bucket-name:
+    region:
+    access-key:
+    secret-key:
+    presign:
+      duration: 1
+sftp:
+  host:
+  port: 22
+  username:
+  password:
+  remote-dir: /uploads
+  allow-unknown-keys: true #false for production
+superset:
+  url: http://localhost:8088
+  username: embedding-admin
+  password: sefers
+  provider: db
+  refresh: true
